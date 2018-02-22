@@ -1,0 +1,98 @@
+{
+  "stats": {
+    "suites": 2,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2018-02-21T21:09:59.478Z",
+    "end": "2018-02-21T21:09:59.543Z",
+    "duration": 65,
+    "testsRegistered": 1,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false,
+    "passPercentClass": "success",
+    "pendingPercentClass": "danger"
+  },
+  "suites": {
+    "uuid": "4e4ac8af-a6a6-41da-ae63-21d8a512ad20",
+    "title": "",
+    "fullFile": "",
+    "file": "",
+    "beforeHooks": [],
+    "afterHooks": [],
+    "tests": [],
+    "suites": [
+      {
+        "uuid": "58dcc3e2-b50c-4cbd-bfa0-6262a812cf57",
+        "title": "Work on google page",
+        "fullFile": "/home/flagoon/Workspace/selenium/tests/test.js",
+        "file": "/tests/test.js",
+        "beforeHooks": [],
+        "afterHooks": [],
+        "tests": [],
+        "suites": [
+          {
+            "uuid": "35a5bbdd-2b94-42b7-a62d-d8aeda2b9ff7",
+            "title": "should search for some stuff",
+            "fullFile": "/home/flagoon/Workspace/selenium/tests/test.js",
+            "file": "/tests/test.js",
+            "beforeHooks": [],
+            "afterHooks": [],
+            "tests": [
+              {
+                "title": "motherfucker",
+                "fullTitle": "Work on google page should search for some stuff motherfucker",
+                "timedOut": false,
+                "duration": 1,
+                "state": "passed",
+                "speed": "fast",
+                "pass": true,
+                "fail": false,
+                "pending": false,
+                "code": "driver.get(\"http://google.pl\");\ndriver\n  .findElement(By.name(\"b\"))\n  .then(element => {\n    console.log(element);\n    if (element) {\n      driver.findElement(By.name(\"q\")).sendKeys(\"Hello World\");\n    } else {\n      driver.findElement(By.name(\"q\")).sendKeys(\"Dupa Blada\");\n    }\n  })\n  .catch(error => {\n    if (error.message && error.message.startsWith(\"no such element\")) {\n      driver.findElement(By.name(\"q\")).sendKeys(\"Hurra\");\n      driver.sleep(10000).then(() => {\n        driver.findElement(By.name(\"q\")).sendKeys(\"huhuhu\");\n      });\n    } else {\n      console.log(`---${error.message}---`);\n    }\n  });",
+                "err": {},
+                "isRoot": false,
+                "uuid": "6c8021dd-6024-4bcb-8a9b-17490565127a",
+                "isHook": false,
+                "skipped": false
+              }
+            ],
+            "suites": [],
+            "passes": [
+              "6c8021dd-6024-4bcb-8a9b-17490565127a"
+            ],
+            "failures": [],
+            "pending": [],
+            "skipped": [],
+            "duration": 1,
+            "root": false,
+            "rootEmpty": false,
+            "_timeout": 15000
+          }
+        ],
+        "passes": [],
+        "failures": [],
+        "pending": [],
+        "skipped": [],
+        "duration": 0,
+        "root": false,
+        "rootEmpty": false,
+        "_timeout": 15000
+      }
+    ],
+    "passes": [],
+    "failures": [],
+    "pending": [],
+    "skipped": [],
+    "duration": 0,
+    "root": true,
+    "rootEmpty": true,
+    "_timeout": 50000
+  },
+  "copyrightYear": 2018
+}
