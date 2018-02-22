@@ -9,7 +9,7 @@ const chalkShould = chalk.blue.bgWhite;
 const chalkError = chalk.red.bgWhite;
 const chalkInfo = chalk.yellow.bgRed;
 
-describe('Working on Zones', () => {
+describe('Working on Zones', function zones() {
     // timeout for mocha.
     this.timeout(15000);
     before(async () => {
