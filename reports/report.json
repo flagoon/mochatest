@@ -1,13 +1,13 @@
 {
   "stats": {
-    "suites": 2,
+    "suites": 1,
     "tests": 1,
     "passes": 1,
     "pending": 0,
     "failures": 0,
-    "start": "2018-02-21T21:09:59.478Z",
-    "end": "2018-02-21T21:09:59.543Z",
-    "duration": 65,
+    "start": "2018-02-23T13:22:30.136Z",
+    "end": "2018-02-23T13:22:36.034Z",
+    "duration": 5898,
     "testsRegistered": 1,
     "passPercent": 100,
     "pendingPercent": 0,
@@ -19,7 +19,7 @@
     "pendingPercentClass": "danger"
   },
   "suites": {
-    "uuid": "4e4ac8af-a6a6-41da-ae63-21d8a512ad20",
+    "uuid": "3134a2b5-4342-4696-b6d4-be4488ffac7c",
     "title": "",
     "fullFile": "",
     "file": "",
@@ -28,61 +28,58 @@
     "tests": [],
     "suites": [
       {
-        "uuid": "58dcc3e2-b50c-4cbd-bfa0-6262a812cf57",
-        "title": "Work on google page",
-        "fullFile": "/home/flagoon/Workspace/selenium/tests/test.js",
-        "file": "/tests/test.js",
-        "beforeHooks": [],
-        "afterHooks": [],
-        "tests": [],
-        "suites": [
+        "uuid": "d4aed050-cd3b-4e0e-a602-9faedf0d139b",
+        "title": "Working on Zones",
+        "fullFile": "D:\\avid\\avid-esd-ui\\selenium\\tests\\zones.spec.js",
+        "file": "\\selenium\\tests\\zones.spec.js",
+        "beforeHooks": [
           {
-            "uuid": "35a5bbdd-2b94-42b7-a62d-d8aeda2b9ff7",
-            "title": "should search for some stuff",
-            "fullFile": "/home/flagoon/Workspace/selenium/tests/test.js",
-            "file": "/tests/test.js",
-            "beforeHooks": [],
-            "afterHooks": [],
-            "tests": [
-              {
-                "title": "motherfucker",
-                "fullTitle": "Work on google page should search for some stuff motherfucker",
-                "timedOut": false,
-                "duration": 1,
-                "state": "passed",
-                "speed": "fast",
-                "pass": true,
-                "fail": false,
-                "pending": false,
-                "code": "driver.get(\"http://google.pl\");\ndriver\n  .findElement(By.name(\"b\"))\n  .then(element => {\n    console.log(element);\n    if (element) {\n      driver.findElement(By.name(\"q\")).sendKeys(\"Hello World\");\n    } else {\n      driver.findElement(By.name(\"q\")).sendKeys(\"Dupa Blada\");\n    }\n  })\n  .catch(error => {\n    if (error.message && error.message.startsWith(\"no such element\")) {\n      driver.findElement(By.name(\"q\")).sendKeys(\"Hurra\");\n      driver.sleep(10000).then(() => {\n        driver.findElement(By.name(\"q\")).sendKeys(\"huhuhu\");\n      });\n    } else {\n      console.log(`---${error.message}---`);\n    }\n  });",
-                "err": {},
-                "isRoot": false,
-                "uuid": "6c8021dd-6024-4bcb-8a9b-17490565127a",
-                "isHook": false,
-                "skipped": false
-              }
-            ],
-            "suites": [],
-            "passes": [
-              "6c8021dd-6024-4bcb-8a9b-17490565127a"
-            ],
-            "failures": [],
-            "pending": [],
-            "skipped": [],
-            "duration": 1,
-            "root": false,
-            "rootEmpty": false,
-            "_timeout": 15000
+            "title": "\"before each\" hook",
+            "fullTitle": "Working on Zones \"before each\" hook",
+            "timedOut": false,
+            "duration": 11,
+            "pass": false,
+            "fail": false,
+            "pending": false,
+            "code": "driver = buildDriver();\nloginToESD(driver);",
+            "err": {},
+            "isRoot": false,
+            "uuid": "c5dfe098-473a-4fa1-86d9-f83463699a97",
+            "isHook": true,
+            "skipped": false
           }
         ],
-        "passes": [],
+        "afterHooks": [],
+        "tests": [
+          {
+            "title": "Should delete a zone",
+            "fullTitle": "Working on Zones Should delete a zone",
+            "timedOut": false,
+            "duration": 5873,
+            "state": "passed",
+            "speed": "slow",
+            "pass": true,
+            "fail": false,
+            "pending": false,
+            "code": "await waitForElement(zonePage.ZONES_PANEL, driver)\n    .then(element => {\n        element.click();\n        console.log(chalkShould(`Zones should be clicked.`));\n    })\n    .catch(error =>\n        console.log(\n            chalkError(`Zones were not pressed/found - ${error}`)\n        )\n    );\nawait waitForElement(zonePage.ZONES_DROP_CHANGE, driver, 2000)\n    .then(() => {\n        console.log(chalkShould(`Checking if zone can be deleted.`));\n    })\n    .catch(async () => {\n        console.log(chalkShould('Creating zone'));\n        await createZone(driver);\n        console.log(chalkShould('Zone created'));\n    });\nawait waitForElement(zonePage.ZONES_DROP_CHANGE, driver, 2000)\n    .then(async element => {\n        await element.click().then(() => {\n            console.log(chalkShould('Trying to delete'));\n            deleteZone(driver);\n            console.log(chalkShould('Deleted the zone'));\n        });\n    })\n    .catch(error => {\n        throw new Error(\n            chalkError(`There is no zone to delete - ${error}`)\n        );\n    });\nawait driver\n    .findElements(zonePage.ZONES_DROP_CHANGE, driver, 5000)\n    .then(() => {\n        throw new Error(chalkError('Zone is still visible in DOM.'));\n    })\n    .catch(() => {\n        console.log(chalkInfo(`There is no zone in DOM.`));\n    });",
+            "err": {},
+            "isRoot": false,
+            "uuid": "64057d1b-60e4-4083-b92c-540b45a429a0",
+            "isHook": false,
+            "skipped": false
+          }
+        ],
+        "suites": [],
+        "passes": [
+          "64057d1b-60e4-4083-b92c-540b45a429a0"
+        ],
         "failures": [],
         "pending": [],
         "skipped": [],
-        "duration": 0,
+        "duration": 5873,
         "root": false,
         "rootEmpty": false,
-        "_timeout": 15000
+        "_timeout": 50000
       }
     ],
     "passes": [],
@@ -92,7 +89,7 @@
     "duration": 0,
     "root": true,
     "rootEmpty": true,
-    "_timeout": 50000
+    "_timeout": 2000
   },
   "copyrightYear": 2018
 }

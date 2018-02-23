@@ -1,36 +1,145 @@
-const { driver } = require('../config/driver');
-const { it, describe, after, before } = require('mocha');
+const { it, describe, afterEach, beforeEach, addContex } = require('mocha');
 const chalk = require('chalk');
-const { waitForElement } = require('../config/helpers');
-const { loginToESD } = require('../config/aggregateSteps');
-const dialog = require('../pages/zoneDialog');
+const chalkShould = chalk.bgWhite.blue;
+const chalkExpected = chalk.yellow;
+const chalkError = chalk.red;
+const chalkInfo = chalk.white.bgYellow;
+const { buildDriver } = require('../config/driver');
+const { waitForElement } = require('../config/aggregateSteps');
+const zonePage = require('../navigation/zonesPage');
+const dialog = require('../navigation/dialogs');
+const {
+    loginToESD,
+    deleteZone,
+    createZone
+} = require('../config/aggregateSteps');
+const zoneDialog = require('../navigation/zoneDialog');
+let driver;
 
-const chalkShould = chalk.blue.bgWhite;
-const chalkError = chalk.red.bgWhite;
-const chalkInfo = chalk.yellow.bgRed;
-
-describe('Working on Zones', function zones() {
+describe('Working on Zones', function() {
     // timeout for mocha.
-    this.timeout(15000);
-    before(async () => {
-        loginToESD();
+    this.timeout(50000);
+    beforeEach(async function() {
+        driver = buildDriver();
+        loginToESD(driver);
     });
 
-    after(() => {
+    it('Should create new Zone', async () => {
+        await waitForElement(zonePage.ZONES_PANEL, driver)
+            .then(element => {
+                element.click();
+                console.log(chalkShould(`Zones should be clicked.`));
+            })
+            .catch(error =>
+                console.log(
+                    chalkError(`Zones were not pressed/found - ${error}`)
+                )
+            );
+        await waitForElement(zonePage.ZONES_DROP_CHANGE, driver)
+            .then(async element => {
+                await element.click();
+                console.log(chalkShould('Drop icon should be pressed.'));
+                deleteZone(driver);
+            })
+            .catch(() => console.log(chalkShould(`No zone to delete`)));
+        await waitForElement(zonePage.ZONES_ADD_NEW_ZONE, driver)
+            .then(async element => {
+                console.log(chalkShould('Add new zone found'));
+                await driver.sleep(2000); // delay for new zone button.
+                element.click();
+            })
+            .catch(error =>
+                console.log(chalkError(`New zone is not clickable - ${error}`))
+            );
+        await waitForElement(
+            zoneDialog.ZDIALOG_ZONE_NAME,
+            driver,
+            10000
+        ).sendKeys(zoneDialog.ZDIALOG_ZONE_CHANGE);
+        await waitForElement(
+            zoneDialog.ZDIALOG_DOMAIN_NAME,
+            driver,
+            10000
+        ).sendKeys(zoneDialog.ZDIALOG_DOMAIN_CHANGE);
+        await waitForElement(zoneDialog.ZDIALOG_SUBMIT, driver).then(
+            element => {
+                console.log(chalkShould('submit'));
+                element.click();
+                console.log(chalk.yellow('Zone created'));
+            }
+        );
+        await driver.sleep(2000);
+
+        await driver
+            .findElement(zonePage.ZONES_CREATED_ZONE)
+            .then(() => console.log(chalk.blue('Correctly created!')))
+            .catch(error => {
+                console.log(
+                    chalk.red.bgWhite(`Zone was not created - ${error}`)
+                );
+                throw new Error();
+            });
         driver.quit();
     });
 
-    /**
-     * It should create the zone, when already present, it should delete it.
-     * Check if zone is present. If yes, then OK, if not, then throw new Error().
-     */
-    it.skip('Should create new Zone', async () => {});
+    it.skip('Should edit a zone', async () => {
+        await waitForElement(zonePage.ZONES_PANEL, driver).click();
 
-    /**
-     * It should edit the value and it should be true.
-     * Check if new name is present. If not, throw Error.
-     */
-    it.skip('Should edit a zone', async () => {});
+        await waitForElement(zonePage.ZONES_DROP_CHANGE, driver).click();
+        await waitForElement(zonePage.ZONES_DROP_CHANGE_EDIT, driver).click();
+        await waitForElement(zoneDialog.ZDIALOG_DOMAIN_NAME, driver).clear();
+        waitForElement(zonePage.ERROR, driver, 5000)
+            .then(() => console.log('none!'))
+            .catch(error => console.log(`HUEHUEHUE ${error}`));
+        await waitForElement(zoneDialog.ZDIALOG_ZONE_NAME, driver).clear();
+        await waitForElement(zoneDialog.ZDIALOG_UPDATE, driver).click();
+    });
+
+    it.only('Should delete a zone', async function() {
+        await waitForElement(zonePage.ZONES_PANEL, driver)
+            .then(element => {
+                element.click();
+                console.log(chalkShould(`Zones should be clicked.`));
+            })
+            .catch(error =>
+                console.log(
+                    chalkError(`Zones were not pressed/found - ${error}`)
+                )
+            );
+
+        await waitForElement(zonePage.ZONES_DROP_CHANGE, driver, 2000)
+            .then(() => {
+                console.log(chalkShould(`Checking if zone can be deleted.`));
+            })
+            .catch(async () => {
+                console.log(chalkShould('Creating zone'));
+                await createZone(driver);
+                console.log(chalkShould('Zone created'));
+            });
+
+        await waitForElement(zonePage.ZONES_DROP_CHANGE, driver, 2000)
+            .then(async element => {
+                await element.click().then(() => {
+                    console.log(chalkShould('Trying to delete'));
+                    deleteZone(driver);
+                    console.log(chalkShould('Deleted the zone'));
+                });
+            })
+            .catch(error => {
+                throw new Error(
+                    chalkError(`There is no zone to delete - ${error}`)
+                );
+            });
+
+        await driver
+            .findElements(zonePage.ZONES_DROP_CHANGE, driver, 5000)
+            .then(() => {
+                throw new Error(chalkError('Zone is still visible in DOM.'));
+            })
+            .catch(() => {
+                console.log(chalkInfo(`There is no zone in DOM.`));
+            });
+    });
 
     /**
      * It should delete the zone, if not present, create one first.
@@ -106,9 +215,13 @@ describe('Working on Zones', function zones() {
 
             await driver
                 .findElement(/* xpath to new domain */)
-                .then(() => console.log(chalkShould(`New domain present in zone.`)))
+                .then(() =>
+                    console.log(chalkShould(`New domain present in zone.`))
+                )
                 .catch(error => {
-                    throw new Error(`Domain is not present in zones. - ${error}`);
+                    throw new Error(
+                        `Domain is not present in zones. - ${error}`
+                    );
                 });
         });
     });
@@ -138,7 +251,9 @@ describe('Working on Zones', function zones() {
         // there should be no error present.
         await waitForElement(/* className to swal2 */)
             .then(() => {
-                throw new Error(`There is an error dialog after canceling action.`);
+                throw new Error(
+                    `There is an error dialog after canceling action.`
+                );
             })
             .catch(() => console.log(chalkInfo(`There is no error `))); // correct.
     });
