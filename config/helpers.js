@@ -1,4 +1,5 @@
 const { until } = require('selenium-webdriver');
+
 const chalk = require(chalk);
 
 exports.waitForElement = function(locator, driver, timeout = Constants.DEFAULT_TIMEOUT) {
