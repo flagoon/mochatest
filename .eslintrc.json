@@ -1,0 +1,7 @@
+{
+    "extends": ["airbnb-base", "prettier"],
+    "rules": {
+        "func-names": ["error", "never"],
+        "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
+    }
+}
